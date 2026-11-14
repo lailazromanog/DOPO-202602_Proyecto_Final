@@ -30,7 +30,7 @@ public class FieldPanel extends JPanel {
     private int tiempoSegundos = 180; 
     private double poderJ1 = 0.0;
     private double poderJ2 = 0.0;
-    
+
     public FieldPanel() {
         // cargamos la imagen; puede fallar si no existe, por eso el try/catch
         try {
@@ -84,7 +84,7 @@ public class FieldPanel extends JPanel {
 
         //marcador y cronometro 
         g.setColor(new Color(0, 0, 0, 150)); //negro con 150/255 de opacidad
-        g.fillRect(0, 0, getWidth(), 40);
+        g.fillRect(0, 0, getWidth(), 48);
         g.setFont(new Font("Arial", Font.BOLD, 24));
         g.setColor(Color.WHITE);
         FontMetrics fm = g.getFontMetrics();
@@ -112,7 +112,7 @@ public class FieldPanel extends JPanel {
         //barras de poder
         int barW = 100; 
         int barH = 10;
-        int barY = 20; 
+        int barY = 34; 
 
         //barra leftplayer
         int barX1 = 15;
