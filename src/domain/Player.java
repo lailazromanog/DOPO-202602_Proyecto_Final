@@ -18,13 +18,14 @@ public class Player {
     private int points;
     private Character character;
     private PowerBar powerBar;
+    private double velocityY; //velocidad vertical, para la fisica del salto del jugador
 
     public Player() {
         this.health = getMaxHealth();
         this.stunned = false;
         this.stunTimer = 0;
         this.auraActive = false;
-        this.speed = 1;
+        this.speed = 5; //era 1, pero a 1 pxel por frame no vamos notar el cambio de movimmiento
         this.jump = 1;
         this.kick = 1;
         this.survival = 1;
@@ -32,6 +33,7 @@ public class Player {
         this.currentEffect = null;
         this.effectTimer = 0;
         this.powerBar = new PowerBar();
+        this.velocityY = 0; //empiezaa en el suelo, sin velocidad vertical
     }
 
     public void moveLeft() {
@@ -53,13 +55,34 @@ public class Player {
             }
         }
     }
-
+    /**
+     * El jugador salta solo si esta en el suelo. Pone la velocidad en y
+     * en negativo porque en la pantalla y= 0 es arriba, entonces 
+     * subir es igual a tener la velocidad en negativo. 
+     */
     public void jump() {
-        if (!stunned && !"unconscious".equals(currentEffect) && !"electrocuted".equals(currentEffect)) {
-            positionY += jump;
+        if(!stunned && !"unconscious".equals(currentEffect) && !"electrocuted".equals(currentEffect)){
+            if(velocityY == 0){ //solo salta si esta en el suelo
+                velocityY = -10; // un impulso hacia arriba
+            }
         }
     }
 
+    /**
+     * Actualiza la posicion vertical del jugador en cada frame.
+     * Aplica gravedad y lo detiene en el suelo.
+     * @para, groundY la coordenada Y del suelo, donde se apoyan los jugadores
+     */
+    public void update(double  groundY){
+        //la gravedad aumenta la velocidad hacia abajo en cada frame
+        velocityY += 0.5;
+
+        //si llego al suelo o lo paso, se deja al jugador en el suelo 
+        if(positionY >= groundY){
+            positionY = groundY;
+            velocityY = 0; //ya no se mueve verticalmente
+        }
+    }
     public void kick(Ball ball) {
         if (!stunned && !"unconscious".equals(currentEffect)) {
             ball.applyForce(kick, 0);
@@ -204,7 +227,10 @@ public class Player {
     public int getSurvival() {
         return survival;
     }
-
+    //para el salto
+    public double getVelocity(){
+        return velocityY;
+    }
     public void setPositionX(double positionX) {
         this.positionX = positionX;
     }
