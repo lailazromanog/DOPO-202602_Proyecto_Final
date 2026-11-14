@@ -2,6 +2,8 @@ package presentation;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,6 +23,13 @@ public class FieldPanel extends JPanel {
     
     // la imagen de la cancha ya cargada
     private BufferedImage cancha;
+    
+    // valores temporales para las barra de poder, luego meto dominio 
+    private int golesJ1 = 0;
+    private int golesJ2 = 0;
+    private int tiempoSegundos = 180; 
+    private double poderJ1 = 0.0;
+    private double poderJ2 = 0.0;
     
     public FieldPanel() {
         // cargamos la imagen; puede fallar si no existe, por eso el try/catch
@@ -72,6 +81,58 @@ public class FieldPanel extends JPanel {
         g.fillOval(xBalon, yBalon, diametroBalon, diametroBalon);
         g.setColor(Color.BLACK);
         g.drawOval(xBalon, yBalon, diametroBalon, diametroBalon);
+
+        //marcador y cronometro 
+        g.setColor(new Color(0, 0, 0, 150)); //negro con 150/255 de opacidad
+        g.fillRect(0, 0, getWidth(), 40);
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.setColor(Color.WHITE);
+        FontMetrics fm = g.getFontMetrics();
+
+        //marcador centrado 
+        String marcador = golesJ1 + "-" + golesJ2; //despeus lo uno con el dominio, metodo Score
+        int anchoMarcador = fm.stringWidth(marcador);
+        g.drawString(marcador, (getWidth() - anchoMarcador)/2, 28);
+        
+        //etiquetas del jugador 1, el leftplayer y el 2, el rightplayer
+        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        FontMetrics fmSmall = g.getFontMetrics();
+        g.drawString("J1", getWidth()/2 - anchoMarcador/2 - fmSmall.stringWidth("J1") - 8,28);
+        g.drawString("J2", getWidth()/2 + anchoMarcador/2 + 8,28);
+
+        //cronometro a la derecha
+        int minutos = tiempoSegundos/ 60; 
+        int segundos = tiempoSegundos % 60;
+        String tiempo = String.format("%d:%02d",minutos, segundos);
+        g.setFont(new Font("Arial", Font.BOLD, 18));
+        FontMetrics fmTime = g.getFontMetrics();
+        g.drawString(tiempo, getWidth() - fmTime.stringWidth(tiempo)- 15, 28);
+        
+
+        //barras de poder
+        int barW = 100; 
+        int barH = 10;
+        int barY = 20; 
+
+        //barra leftplayer
+        int barX1 = 15;
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(barX1, barY, barW, barH);
+        g.setColor(new Color(0xE8A033));
+        g.fillRect(barX1, barY, (int) (barW * poderJ1), barH);
+        g.setColor(Color.WHITE);
+        g.drawRect(barX1, barY, barW, barH);
+
+        //barra rightplayer
+        int barX2 =getWidth() - barW - 15;
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(barX2, barY, barW, barH);
+        g.setColor(new Color(0xE8A033));
+        g.fillRect(barX1, barY, (int) (barW * poderJ2), barH);
+        g.setColor(Color.WHITE);
+        g.drawRect(barX1, barY, barW, barH);
+
+
     }
 
     /**
