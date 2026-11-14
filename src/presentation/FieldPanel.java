@@ -26,7 +26,7 @@ public class FieldPanel extends JPanel {
         // cargamos la imagen; puede fallar si no existe, por eso el try/catch
         try {
             File f = new File("resources/cancha.png");
-            System.out.println("Buscando imagen en: " + f.getAbsolutePath() + "  | existe? " + f.exists());
+            //System.out.println("Buscando imagen en: " + f.getAbsolutePath() + " existe? " + f.exists());
             cancha = ImageIO.read(f);
         } catch (IOException e) {
             System.out.println("No se pudo cargar la cancha: " + e.getMessage());
@@ -63,13 +63,22 @@ public class FieldPanel extends JPanel {
         g.fillOval(rightPlayer, y, diametro, diametro);
         g.setColor(Color.BLACK);
         g.drawOval(rightPlayer, y, diametro, diametro);
+
+        //balon 
+        int diametroBalon = getHeight()/9; 
+        int xBalon = getWidth() / 2 - diametroBalon/2; 
+        int yBalon = (int) (getHeight() * 0.78); //apoyado en el pasto 
+        g.setColor(Color.WHITE);
+        g.fillOval(xBalon, yBalon, diametroBalon, diametroBalon);
+        g.setColor(Color.BLACK);
+        g.drawOval(xBalon, yBalon, diametroBalon, diametroBalon);
     }
 
     /**
      * Main para probar solo la cancha
      */
     public static void main(String[] args) {
-        JFrame ventana = new JFrame("Cancha DOPOScoccer");
+        JFrame ventana = new JFrame("Cancha DOPOSoccer");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.add(new FieldPanel());
         ventana.pack(); //ajusta la venta al tamaño preferido del panel 
